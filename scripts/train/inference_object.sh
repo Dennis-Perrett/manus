@@ -4,8 +4,15 @@ SUBJECT_NAME=$1
 EXP_NAME=$2
 EXP_DIR=$3
 
-BLENDER_PATH=~/data/users/cpokhari/blender-3.3/blender
+BLENDER_PATH=/usr/bin/blender
 
+echo ""
+echo ""
+echo ""
+echo "EXP DIR: $EXP_DIR"
+echo ""
+echo ""
+echo ""
 ## Get novel cam path in the Blender
 PC_PLY_PATH="${EXP_DIR}/init_gaussians.ply"
 OUT_PATH="${EXP_DIR}/results/novel_cam.pkl"
@@ -14,6 +21,7 @@ OUT_PATH="${EXP_DIR}/results/novel_cam.pkl"
 $BLENDER_PATH ./data/blend_files/static.blend \
     -P scripts/process/bl_render.py -b -- $PC_PLY_PATH $OUT_PATH 1.2 0.01 -1.578 0 0
 
+echo $OUTPATH
 # Inference on train/test Set
 python main.py --config-name config.yaml \
     --config-path $EXP_DIR \

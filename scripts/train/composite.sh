@@ -1,12 +1,12 @@
 #!/bin/bash
-
+echo "test"
 SUBJECT_NAME=$1
 HAND_EXP_NAME=$2
 MODE=$3 ##results/eval
 
-EXP_DIR="/users/cpokhari/data/users/cpokhari/FastGaussians"
+EXP_DIR="FastGaussians"
 ROOT_DIR="${DATA_DIR}/${SUBJECT}"
-DATA_DIR="/users/cpokhari/data/datasets/MANUS_data"
+DATA_DIR="data/datasets/MANUS_data"
 
 ## Define the objects for which we want to do grasp capture. 
 ## Note that if you are using "eval" mode, then objs should be `green colored evaluation objects`

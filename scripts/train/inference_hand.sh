@@ -4,7 +4,14 @@ SUBJECT_NAME=$1
 EXP_NAME=$2
 DATA_DIR="/users/cpokhari/data/datasets/MANUS_data"
 EXP_DIR="/users/cpokhari/data/users/cpokhari/FastGaussians/hand/${SUBJECT_NAME}/${EXP_NAME}"
+
+echo ""
+echo ""
+echo ""
 echo "EXP DIR: $EXP_DIR"
+echo ""
+echo ""
+echo ""
 echo "Subject name: $SUBJECT_NAME"
 
 OUT_PATH="${EXP_DIR}/results/novel_cam.pkl"

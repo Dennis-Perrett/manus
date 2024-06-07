@@ -20,8 +20,21 @@ os.environ['SLURM_JOB_NAME'] = 'bash'
 torch.set_float32_matmul_precision('medium')  # 'high'
 
 
-@hydra.main(config_path="./config", config_name="OBJ_GAUSSIAN")
+import warnings
+
+def fxn():
+    warnings.warn("deprecated", DeprecationWarning)
+
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    fxn()
+
+
+
+@hydra.main(config_path="./config", config_name="OBJ_GAUSSIAN", version_base='1.1')
 def main(config):
+    cprint(OmegaConf.to_yaml(config),'red')
+    cprint(config.checkpoint, 'green')
     cur_path = os.getcwd()
 
     if config.trainer.mode == 'train':
@@ -32,31 +45,41 @@ def main(config):
             cprint("------------------------------------------------------", 'red')
 
     if config.trainer.mode == 'train':
+        cprint("Starting Training... Setting up OmegaConfig", 'green')
         save_path = os.path.join(cur_path, "config.yaml")
         if os.path.exists(save_path):
             time_now = math.ceil(time.time())
             save_path = os.path.join(cur_path, f"config_{time_now}.yaml")
+        cprint(f"Saving config to {save_path}", 'blue')
         OmegaConf.save(config, save_path)
 
     ckpt_dir = os.path.join(cur_path, "checkpoints/")
+    
+    cprint("Checking if checkpoint exists","green")
+    cprint(f"Config Checkpoint: {config.checkpoint}", 'magenta')
     if config.checkpoint:
+        cprint(f"Checkpoint Exists {config.checkpoint}", 'magenta')
         if config.checkpoint == "best":
             config.checkpoint = find_best_checkpoint(ckpt_dir)
         else:
             config.checkpoint = os.path.join(ckpt_dir, config.checkpoint)
         cprint(f"Loading from the checkpoint: {config.checkpoint}", 'green')
     else:
+        cprint(f"Creating checkpoint dirs {ckpt_dir}","blue")
         os.makedirs(ckpt_dir, exist_ok=True)
         config.checkpoint = None
+        
+    pl.seed_everything(config.trainer.seed),
 
-    pl.seed_everything(config.trainer.seed)
-
+    cprint("Calling train function", 'green')
     train(config, mode=config.trainer.mode, ckpt_dir=ckpt_dir)
 
 
 def train(config, mode, ckpt_dir):
-
+    cprint("Running Train","green")
+    cprint(f"Train Mode: {mode}",'magenta')
     if mode != 'test':
+        cprint("Mode is NOT test",'red')
         callbacks = [
             ModelCheckpoint(
                 # monitor="loss",
@@ -81,6 +104,7 @@ def train(config, mode, ckpt_dir):
     if mode == 'debug':
         trainer = pl.Trainer(fast_dev_run=True)
     else:
+        cprint("Running pure train mode without debug or test","blue")
         ## DDP Fails for multiple models and optimizers
         # strategy = 'ddp'
         ## DDP_parameter_false works for multiple models and optimizers but slow
@@ -93,6 +117,7 @@ def train(config, mode, ckpt_dir):
             **config.trainer.pl_vars
         )
 
+    cprint(f"Config Checkpoint is: {config.checkpoint}", "magenta")
     if config.checkpoint is not None:
         num_gaussians = get_num_gaussians_from_checkpoint(config.checkpoint)
         config.model.opts.num_gaussians = num_gaussians
