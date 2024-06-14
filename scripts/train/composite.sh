@@ -4,19 +4,20 @@ SUBJECT_NAME=$1
 HAND_EXP_NAME=$2
 MODE=$3 ##results/eval
 
-EXP_DIR="FastGaussians"
+EXP_DIR="outputs/object"
 ROOT_DIR="${DATA_DIR}/${SUBJECT}"
-DATA_DIR="data/datasets/MANUS_data"
+DATA_DIR="MANUS_data"
 
 ## Define the objects for which we want to do grasp capture. 
 ## Note that if you are using "eval" mode, then objs should be `green colored evaluation objects`
-OBJS=("color1")
+OBJS=("books1")
 
 for OBJ_NAME in "${OBJS[@]}"
 do
+  echo "doing ${OBJ_NAME}"
   OBJ_DIR="${ROOT_DIR}/objects/${OBJ_NAME}"
   OBJECT_EXP_NAME="${OBJ_NAME}"
-  OBJECT_EXP_DIR="${EXP_DIR}/object/${SUBJECT_NAME}/${OBJECT_EXP_NAME}/"
+  OBJECT_EXP_DIR="${EXP_DIR}/${SUBJECT_NAME}/${OBJECT_EXP_NAME}"
 
   HAND_EXP_DIR="${EXP_DIR}/hand/${SUBJECT_NAME}/${HAND_EXP_NAME}"
 
@@ -24,7 +25,7 @@ do
   GRASP_PATH="${DATA_DIR}/${SUBJECT_NAME}/grasps/${OBJECT_EXP_NAME}_grasp1/meta_data.pkl"
 
   EXP_NAME=$OBJECT_EXP_NAME"--"$HAND_EXP_NAME
-  EXP_DIR="${EXP_DIR}/composite/${SUBJECT_NAME}/${EXP_NAME}/"
+  EXP_DIR="${EXP_DIR}/composite/${SUBJECT_NAME}/${EXP_NAME}"
 
   if [ ! -d "$EXP_DIR" ]; then
       mkdir -p "${EXP_DIR}/results"

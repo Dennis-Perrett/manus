@@ -8,8 +8,8 @@ OBJECT_EXP_NAME=$5
 GRASP_PATH=$6
 EXP_DIR=$7
 CONTACT_RENDER_TYPE=$8
-DATA_DIR="/users/cpokhari/data/datasets/MANUS_data"
-
+DATA_DIR="MANUS_data"
+BLENDER_PATH="/graphics/opt/opt_Ubuntu22.04/blender/blender-3.3.0-linux-x64/blender"
 
 if [[ $CONTACT_RENDER_TYPE == "acc_gt_eval" ]]; then
   GRASP_PATH="${DATA_DIR}/${SUBJECT_NAME}/evals/${OBJECT_EXP_NAME}_action/meta_data.pkl"
@@ -22,7 +22,7 @@ else
   CAM_PATH="${EXP_DIR}/results/novel_cam.pkl"
   BKGD_COLOR="white"
 
-  ~/data/users/cpokhari/blender-3.3/blender \
+ $BLENDER_PATH \
       ./data/blend_files/static.blend \
       -P scripts/process/bl_render.py -b -- $PC_PLY_PATH $CAM_PATH 1.0 0.004 -1.578 0 0
 

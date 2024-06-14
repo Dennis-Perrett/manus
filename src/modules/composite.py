@@ -33,6 +33,7 @@ class TrainingModule(BaseTrainingModule):
             self.o_module.model.training_setup()
         else:
             self.o_module.model = freeze_model(self.o_module.model)
+            
         self.model = self.h_module.model
 
         self.render_contact_type = self.opts.test_dataset.opts.contact_render_type
@@ -110,8 +111,10 @@ class TrainingModule(BaseTrainingModule):
         return {"loss": final_loss}
 
     def render(self, batch):
+        # self(batch) is the lightning way of calling .forward()
         pred = self(batch)
 
+        
         if self.render_contact_type == 'gt_eval':
             h_dist, h_cmap = self.render_contacts(pred, batch, batch['cano_camera'], 'hand_only')
             self.h_ac.append(h_dist)
@@ -282,8 +285,8 @@ class TrainingModule(BaseTrainingModule):
             for idx, img in enumerate(self.test_images):
                 cam_name = self.info[idx][-1]
                 img_name = self.info[idx][1]
-                # cam_dir = os.path.join(eval_dir, cam_name)
-                # os.makedirs(cam_dir, exist_ok=True)
+                cam_dir = os.path.join(eval_dir, cam_name)
+                os.makedirs(cam_dir, exist_ok=True)
                 img_path = os.path.join(eval_dir, f'{cam_name}.png')
                 dump_image(img, img_path)
             return

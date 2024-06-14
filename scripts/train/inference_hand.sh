@@ -2,8 +2,10 @@
 
 SUBJECT_NAME=$1
 EXP_NAME=$2
-DATA_DIR="/users/cpokhari/data/datasets/MANUS_data"
-EXP_DIR="/users/cpokhari/data/users/cpokhari/FastGaussians/hand/${SUBJECT_NAME}/${EXP_NAME}"
+DATA_DIR="/MANUS_data"
+EXP_DIR="outputs/hand/${SUBJECT_NAME}/${EXP_NAME}"
+
+BLENDER_PATH="/graphics/opt/opt_Ubuntu22.04/blender/blender-3.3.0-linux-x64/blender"
 
 echo ""
 echo ""
@@ -21,7 +23,7 @@ if test -f $OUT_PATH; then
    echo "Novel cam file exists!!!"
 else
   # Get novel cam path in the Blender
-~/data/users/cpokhari/blender-3.3/blender \
+$BLENDER_PATH \
    ./data/blend_files/static.blend \
    -P scripts/process/bl_render.py -b -- $PC_PLY_PATH $OUT_PATH 0.8 0.005 0 0 0
 fi

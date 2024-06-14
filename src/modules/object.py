@@ -9,6 +9,7 @@ from src.modules.base import BaseTrainingModule
 
 class TrainingModule(BaseTrainingModule):
     def __init__(self, opts, mode):
+        cprint("Init of Training Module","red")
         super().__init__(opts, mode)
         self.opts = opts
         self.mode = mode

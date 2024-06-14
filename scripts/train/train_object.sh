@@ -35,7 +35,7 @@ do
         trainer.num_workers=4 \
         train_dataset.opts.split_ratio=0.98 \
         trainer.pl_vars.accumulate_grad_batches=1 \
-        trainer.pl_vars.max_steps=10000 \
+        trainer.pl_vars.max_steps=15000 \
         train_dataset.opts.subject=$SUBJECT \
         train_dataset.opts.root_dir=$OBJ_DIR \
         train_dataset.opts.params_dir=$CALIB_DIR \
@@ -54,13 +54,5 @@ echo -e "\n\n\n"
 ## Inference on novel views requires downloading the Blender
 ## Set the BLENDER_PATH in the inference-object.sh
 
-
-echo ""
-echo ""
-echo ""
-echo "EXP DIR: $EXP_OBJ_DIR"
-echo ""
-echo ""
-echo ""
 bash scripts/train/inference_object.sh $SUBJECT $OBJ_NAME $EXP_OBJ_DIR
 done
