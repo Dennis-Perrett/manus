@@ -13,7 +13,6 @@ import time
 
 class BaseTrainingModule(LightningModule):
     def __init__(self, opts, mode):
-        cprint("init base Training","red")
         super(BaseTrainingModule, self).__init__()
         self.save_hyperparameters()
         self.mode = mode
@@ -248,15 +247,10 @@ class BaseTrainingModule(LightningModule):
         img = to_numpy(torch.clamp(pred["render"], 0, 1))
         img = (img * 255).astype(np.uint8)
         if self.test_on_train_dataset:
-            #cprint(f"GT_IMG dims {batch["rgb"][0].shape}","blue")
             gt_img = dump_image(batch["rgb"][0], return_img=True)
             diff = (gt_img / 255.0 - img / 255.0) ** 2
             diff = diff * 255.0
-            cprint(f"img dims {img.shape}","red")
-            cprint(f"gt_img dims {gt_img.shape}","red")
-            cprint(f"diff dims {diff.shape}","red")
             img = concat_img_array(img, gt_img)
-            cprint("beteween concats")
             img = concat_img_array(img, diff)
 
         self.test_images.append(img)
@@ -308,8 +302,8 @@ class BaseTrainingModule(LightningModule):
             else:
                 dir_name = "test_novel"
 
-            test_image_dir = os.path.join(self.test_results_dir, dir_name)
-            os.makedirs(test_image_dir, exist_ok=True)
+            # test_image_dir = os.path.join(self.test_results_dir, dir_name)
+            # os.makedirs(test_image_dir, exist_ok=True)
             dump_video(
                 self.test_images, os.path.join(self.test_results_dir, f"{dir_name}.mp4")
             )

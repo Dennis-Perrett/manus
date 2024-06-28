@@ -7,15 +7,6 @@ EXP_DIR="outputs/hand/${SUBJECT_NAME}/${EXP_NAME}"
 
 BLENDER_PATH="/graphics/opt/opt_Ubuntu22.04/blender/blender-3.3.0-linux-x64/blender"
 
-echo ""
-echo ""
-echo ""
-echo "EXP DIR: $EXP_DIR"
-echo ""
-echo ""
-echo ""
-echo "Subject name: $SUBJECT_NAME"
-
 OUT_PATH="${EXP_DIR}/results/novel_cam.pkl"
 PC_PLY_PATH="${EXP_DIR}/init_gaussians.ply"
 

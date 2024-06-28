@@ -1,4 +1,5 @@
 defaults:
+# Blue > folder, orange > file
   - trainer: trainer
   - datasets/train@train_dataset: brics_dynamic
   - datasets/test@test_dataset: test_dynamic

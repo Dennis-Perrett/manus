@@ -2,7 +2,7 @@ import math
 import sys
 # Add the custom site-packages path to sys.path
 sys.path.append('/home/perrettde/.local/lib/python3.10/site-packages')
-sys.path.append('/home/perrettde/Documents/thesis/manus/env-manus/lib/python3.10/site-packages')
+sys.path.append('/home/perrettde/Documents/thesis/manus/.env-manus2/lib/python3.10/site-packages')
 import joblib
 from mathutils import Vector, Euler
 from mathutils import Matrix
@@ -10,6 +10,7 @@ import json
 import bpy
 import os
 import numpy as np
+import math
 import re
 import blender_wormholes as bl
 
@@ -98,8 +99,8 @@ def animate_scene(path, scene, camera, obj, circle_path, z_step):
     
     joblib.dump(all_data, path) 
 
+
 def main():
-    print("Runnig blender script")
     argv = sys.argv
     argv = argv[argv.index("--") + 1 :]
     ply_path = argv[0]
@@ -135,7 +136,6 @@ def main():
 
     obj = sc.add_objects(ply_path)
     sc.select_object(obj.name)
-    print(f"OBNJ TPYEZ path: {type(obj)}")
     obj.set_origin_to("geometry")
     cam = bl.core.Camera("Camera")
 
@@ -156,22 +156,6 @@ def main():
     # os.system(f"./blender/blender ./data/blend_files/static.blend -P ./scripts/bl_render.py -- 0 {mesh_path} {normal_video_path} ")
     # sc.render(animation=True)
     # sc.delete_objects(obj.name)
-
-
-def print_python_info():
-    # Print the Python version
-    print("Python Version:", sys.version)
-    print()
-    
-    # Print the Python executable path
-    print("Python Executable Path:", sys.executable)
-    print()
-    
-    # Print the paths where Python looks for modules
-    print("Python Path:")
-    for path in sys.path:
-        print("  ", path)
         
 if __name__ == '__main__':
-    print_python_info()
     main()

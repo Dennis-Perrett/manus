@@ -10,6 +10,8 @@ log_losses: true
 loggers: [csv] #wandb
 torch_compile_mode:
 accum_iter: 1
+min_delta: 0.001
+save_ckpt_every_n_iters: 25
 ##default, reduce-overhead, and max-autotune
 
 pl_vars:

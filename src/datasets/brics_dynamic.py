@@ -31,44 +31,41 @@ class Dataset(torch.utils.data.Dataset):
     """Single subject data loader for training and evaluation."""
 
     def __init__(self, opts, split="train"):
-        cprint(f"Using {opts.root_dir}","magenta")
-        if (True):
-            self.resize_factor = opts.resize_factor
-            self.split = split
-            self.near = opts.near
-            self.far = opts.far
-            self.training = split == "train"
-            self.bg_color = opts.bg_color
-            self.opts = opts
-            self.subject_id = opts.subject
-            self.width = opts.width
-            self.height = opts.height
+        self.resize_factor = opts.resize_factor
+        self.split = split
+        self.near = opts.near
+        self.far = opts.far
+        self.training = split == "train"
+        self.bg_color = opts.bg_color
+        self.opts = opts
+        self.subject_id = opts.subject
+        self.width = opts.width
+        self.height = opts.height
 
-            root_fp = os.path.join(
-                os.path.dirname(os.path.abspath(__file__)),
-                "..",
-                "..",
-                opts.root_dir,
+        root_fp = os.path.join(
+            os.path.dirname(os.path.abspath(__file__)),
+            "..",
+            "..",
+            opts.root_dir,
+        )
+
+        self.dtype = torch.get_default_dtype()
+        self.root_dir = root_fp
+        self.actions, self.index_list, self.metadata_dict, to_choose = (
+            self.dataset_index_list(
+                self.root_dir,
+                split,
+                self.opts.num_time_steps,
+                self.opts.split_ratio,
+                self.opts.rand_views_per_timestep,
             )
+        )
 
-            self.dtype = torch.get_default_dtype()
-            self.root_dir = root_fp
-            self.actions, self.index_list, self.metadata_dict, to_choose = (
-                self.dataset_index_list(
-                    self.root_dir,
-                    split,
-                    self.opts.num_time_steps,
-                    self.opts.split_ratio,
-                    self.opts.rand_views_per_timestep,
-                )
-            )
+        # Compute the cameras once
+        self.get_all_cameras(to_choose)
+        # self.print_data_stats()
 
-            # Compute the cameras once
-            self.get_all_cameras(to_choose)
-            # self.print_data_stats()
-
-            super().__init__()
-        
+        super().__init__()
 
     def sample_gaussians_on_bones(
         self, sample_size, mano_weights=False, init_type=None
@@ -78,8 +75,8 @@ class Dataset(torch.utils.data.Dataset):
         bones_rest = self.metadata_dict[action][fno]["bones_rest"]
         bones_rest = to_tensor(bones_rest)
 
-        points, points_colors = sample_gaussians_on_bones_func(bones_rest, sample_size)
-        # points, points_colors = sample_gaussians_on_mano(self.mano_data, sample_size)
+        #points, points_colors = sample_gaussians_on_bones_func(bones_rest, sample_size)
+        points, points_colors = sample_gaussians_on_mano(self.mano_data, sample_size)
 
         if mano_weights:
             if init_type == "mano_init_voxel":

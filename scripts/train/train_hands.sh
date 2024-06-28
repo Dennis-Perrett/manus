@@ -3,16 +3,16 @@
 SUBJECT=$1
 EXP_NAME=$2
 
-DATA_DIR="MANUS_data"
+export HYDRA_FULL_ERROR=1
+
+DATA_DIR="/graphics/scratch2/students/perrettde/Manus_Data"
 EXP_DIR="outputs/hand/${SUBJECT}/${EXP_NAME}"
 ROOT_DIR="${DATA_DIR}/${SUBJECT}/actions_hdf5"
 
 WIDTH=1280
 HEIGHT=720
 
-
-if [ 1 = 1 ]
-
+if [ 1 == 1 ]
 then 
     python main.py --config-name HAND_GAUSSIAN \
         output_dir=$EXP_DIR \
@@ -23,6 +23,7 @@ then
         trainer.gpus=[0] \
         trainer.num_workers=4 \
         trainer.accum_iter=1 \
+        trainer.save_ckpt_every_n_iters=5 \
         trainer.pl_vars.max_steps=15000 \
         +trainer.pl_vars.check_val_every_n_epoch=1 \
         train_dataset.opts.num_time_steps=1 \

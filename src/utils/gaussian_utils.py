@@ -415,7 +415,6 @@ def render_gaussians(
         cov3D_precomp=posed_cov,
     )
 
-    # Make sure RGB is correct. BRG -> RGB
     rendered_image = torch.permute(rendered_image, (1, 2, 0))
 
     # Those Gaussians that were frustum culled or had a radius of 0 were not visible.
@@ -537,31 +536,21 @@ def get_contact_dist(pt1, pt2):
         ti_contact_map: ti.types.ndarray(ndim=1),
         ti_contact_indices: ti.types.ndarray(ndim=1),
     ):
-        """
-        Returns:
-            contact_map: the distances for each point of pt1 to pt2.
-            contact_indices: the point in pt2 to which point i in pt1 is closest to. 
-        """
-        # For each gaussian in part 1
         for i in range(pt1.shape[0]):
-            min_dist = 1e9 # initialise some large number as the current minimum distnace
-            # For each gaussian in part 2
+            min_dist = 1e9
             for j in range(pt2.shape[0]):
-                dist = 0.0 # init distance
-                # for each dimension
+                dist = 0.0
                 for k in range(3):
-                    dist += (ti_pt1[i, k] - ti_pt2[j, k]) ** 2 # distance^2 = sum[(a-b)^2]
-                dist = ti.sqrt(dist) # get actual distance by taking sqroot
-                # if the distance is smaller than threshold (this counts as contact)
+                    dist += (ti_pt1[i, k] - ti_pt2[j, k]) ** 2
+                dist = ti.sqrt(dist)
                 if dist < min_dist:
-                    min_dist = dist # Update threshold to get closest point
-                    ti_contact_indices[i] = j # Save which point is closest
+                    min_dist = dist
+                    ti_contact_indices[i] = j
             ti_contact_map[i] = min_dist
 
     calculate_distances(ti_pt1, ti_pt2, ti_contact_map, ti_contact_indices)
     contact_map = attach(to_tensor(ti_contact_map.to_numpy()), device)
     contact_indices = attach(to_tensor(ti_contact_indices.to_numpy()), device)
-    # Return distance, indices
     return contact_map, contact_indices
 
 
@@ -580,7 +569,6 @@ def remove_outliers(pts_path, prob, neighbors):
 
 
 def get_cmap(pt1, pt2, c_thresh=0.004, cmap_type="gray"):
-    # Input is h_out.xyz, o_out.xyz
     dist, indices = get_contact_dist(pt1, pt2)
     dist = torch.clamp(dist.clone(), 0, c_thresh) / c_thresh
     dist = 1 - dist

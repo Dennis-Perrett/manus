@@ -14,7 +14,6 @@ class Dataset(torch.utils.data.Dataset):
         self.split = split
         self.bg_color = opts.bg_color
 
-        cprint(f"Data directory: {self.instance_dir}",'cyan')
         if not os.path.exists(self.instance_dir):
             raise ValueError(f"Data directory {self.instance_dir} is empty")
 
